@@ -37,17 +37,18 @@ public class Gameflow {
 	 */
 	public static void main(String[] args) {
 		
-		System.out.println("Simple Footie Starts 2!");
+		System.out.println("Simple Footie Starts!");
 		
 		try {
-			Environment.load();
+			Environment.load();  // default path: ./resources/data/db.xml
 		} catch (Exception ex) {
 			System.out.println("Error loading environment");
 			ex.printStackTrace();
 			return;
 		}
 
-		/*
+		//System.out.println("args.length="+args.length); // args.length == 0
+		
 		if (args.length == 0) {
 			display(Screens.MAIN);
 		} else {
@@ -145,7 +146,7 @@ public class Gameflow {
 			}
 		}
 		
-		*/
+		
 	}
 	
 	/**
