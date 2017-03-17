@@ -1,0 +1,104 @@
+<project name="StartUp Manager" basedir=".">
+	
+	<property file="build.properties"/>
+	
+	<property name="app.dir" value="${server.dir}\webapps\${context.name}"/>
+	<property name="data.dir" value="${app.dir}\WEB-INF\data"/>
+	<property name="server.lib.dir" value="${server.dir}\lib"/>
+	<property name="app.lib.dir" value="${app.dir}\WEB-INF\lib"/>
+	
+	<path id="classpath">
+		<fileset dir="${app.lib.dir}" includes="**/*.jar"/>
+		<fileset dir="${server.lib.dir}" includes="**/*.jar"/>
+	</path>
+	
+	<target name="clean">
+		<delete dir="build"/>
+	</target>
+	
+	<!--
+	<target name="clean-web">
+		<delete dir="build/classes/web"/>
+	</target>
+	
+	<target name="compile-web">
+		<mkdir dir="build/classes/web"/>
+		<javac srcdir="src/web" destdir="build/classes" classpathref="classpath"/>	
+	</target>
+	-->
+	
+	<target name="init-server">
+		
+		<mkdir dir="${app.dir}"/>
+		<mkdir dir="${app.dir}/WEB-INF"/>
+		<mkdir dir="${app.dir}/WEB-INF/classes"/>
+		<mkdir dir="${app.dir}/WEB-INF/data"/>
+		<mkdir dir="${app.dir}/WEB-INF/lib"/>
+		
+		<!-- copy dependencies -->
+		<copy todir="${app.dir}/WEB-INF/lib">
+			<fileset dir="resources/lib"/>
+		</copy>
+	</target>
+	
+	<target name="clean-server">
+		<delete dir="${app.dir}"/>
+	</target>
+	
+	<target name="compile-all">
+		<mkdir dir="build/classes"/>
+		<javac srcdir="src/com/simplefootie" destdir="build/classes" classpathref="classpath"/>
+		<javac srcdir="src/com/simplefootie/data" destdir="build/classes" classpathref="classpath"/>
+		<javac srcdir="src/com/simplefootie/outcomes" destdir="build/classes" classpathref="classpath"/>
+		<javac srcdir="src/com/simplefootie/domain" destdir="build/classes" classpathref="classpath"/>
+		<javac srcdir="src/com/simplefootie/web" destdir="build/classes" classpathref="classpath"/>
+	</target>
+	
+	<!--
+	<target name="deploy-web">
+		<copy todir="${app.dir}/WEB-INF/classes/web">
+			<fileset dir="build/classes/web"/>
+		</copy>
+	</target>
+	-->
+	
+	<target name="deploy-config">
+		<!-- copy deployment descriptor -->
+		<copy todir="${app.dir}/WEB-INF" file="resources/config/web.xml"/>	
+	</target>
+	
+	<!-- only web resources and jsps -->
+	<target name="deploy-web-light">
+		<copy todir="${app.dir}">
+			<fileset dir="resources/web"/>
+		</copy>	
+	</target>
+	
+	<target name="copy-data">
+		<copy todir="${data.dir}">
+			<fileset dir="resources/data"/>
+		</copy>
+	</target>
+	
+	<!-- This will copy all the web build contents to the web application -->
+	<target name="deploy-all">
+		
+		<antcall target="deploy-web-light"/>
+		<antcall target="deploy-config"/>
+		<antcall target="copy-data"/>
+		
+		<copy todir="${app.dir}/WEB-INF/classes">
+			<fileset dir="build/classes"/>
+		</copy>
+	</target>
+	
+	<target name="build-all">
+		<!-- clean, clean-server, init-server, compile-all, deploy-all -->
+		<antcall target="clean"/>
+		<antcall target="clean-server"/>
+		<antcall target="init-server"/>
+		<antcall target="compile-all"/>
+		<antcall target="deploy-all"/>
+	</target>
+	
+</project>
