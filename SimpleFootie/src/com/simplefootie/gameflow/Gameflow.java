@@ -47,7 +47,7 @@ public class Gameflow {
 			return;
 		}
 
-		System.out.println("args.length="+args.length); // args.length == 0
+		//System.out.println("args.length="+args.length); // args.length == 0
 		
 		if (args.length == 0) {
 			display(Screens.MAIN);
