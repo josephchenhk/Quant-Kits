@@ -51,12 +51,16 @@ public class Environment {
 	 */
 	public static void load(String path) throws ParserConfigurationException, IOException, SAXException {
 		
+		System.out.println("print path:"+path);
+		
 		DocumentBuilderFactory docBuildFactory = DocumentBuilderFactory.newInstance();
 		DocumentBuilder docBuilder = docBuildFactory.newDocumentBuilder();
 		
 		environmentDocument = docBuilder.parse(new File(path));
 		
 		List<Team> teams = Leagues.getAllTeams(environmentDocument);
+		
+		System.out.println("print teams:"+teams);
 		
 		Collections.sort(teams);
 		
