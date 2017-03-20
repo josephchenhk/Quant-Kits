@@ -166,6 +166,7 @@ public class Gameflow {
 			Main.display();
 			Main.Options userOption = Main.getUserInput();
 			
+			System.out.println(Main.class);
 			display(Screens.getScreenFromMenuSelection(userOption, Main.class));
 			
 			break;

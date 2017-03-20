@@ -138,8 +138,9 @@ public class Match {
 		int homeTeamRanking = competition.getTeamRanking(this.homeTeam.getName());
 		int awayTeamRanking = competition.getTeamRanking(this.awayTeam.getName());
 		
+		System.out.println(this.getClass().getName());
 		// logger.setLevel(Level.CONFIG);
-		
+		// System.out.println(homeTeamRanking+";"+awayTeamRanking);		
 		logger.config("Home team ranking: " + homeTeamRanking);
 		logger.config("Away team ranking: " + awayTeamRanking);
 		
