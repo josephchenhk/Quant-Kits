@@ -179,7 +179,7 @@ public class PrepareMatch {
             Signal currentSignal = match.play(0); // Kick off
             // System.out.println(currentSignal);
             
-            int count = 0;
+/*            int count = 0;
             
             while (!(currentSignal instanceof EndOfMatch) && currentSignal != null) { 
                 
@@ -195,7 +195,7 @@ public class PrepareMatch {
             System.out.println();
             
             // match.getMatchRewind().dump();
-            
+*/            
         } catch (SQLException sqlex) {
             System.out.println(sqlex.getMessage());
         } catch (Exception ex) {
