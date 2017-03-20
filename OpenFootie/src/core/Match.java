@@ -3751,11 +3751,15 @@ public class Match {
     private void loadProbModel() {
         
         try {
-            FileInputStream binaryInput = new FileInputStream(probModelFilename);
-            
+        	// probModelFilename: data/match report.data
+        	// binaryInput = java.io.FileInputStream@799f7e29
+            FileInputStream binaryInput = new FileInputStream(probModelFilename);  
+          
+            // Constants.REC_SIZE = 19, currentRow = [B@799f7e29  ????
             byte [] currentRow = new byte[Constants.REC_SIZE];
             
             int currentSize = -1;
+            // binaryInput.read(currentRow) = 19
             while ((currentSize = binaryInput.read(currentRow)) != -1) {
                 
                 if (currentSize != Constants.REC_SIZE) {
@@ -3771,8 +3775,10 @@ public class Match {
                 
                 WrapperObject currentWO = new WrapperObject(loadedRow);
                 
+                System.out.println(currentWO + "???");
                 probModel.add(currentWO);
             }
+            System.out.println(probModel.size()+"!!!!!!!!!");
             
             binaryInput.close();
             
