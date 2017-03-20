@@ -11,5 +11,15 @@ After you have done all these preliminary settings, running the engine on your d
 where <home-team-id> and <away-team-id> are the database ids of the opponent teams.
 
 ## Install Database
-1. Go to https://dev.mysql.com/downloads/mysql/
+1. Go to https://dev.mysql.com/downloads/mysql/ and download the mysql installer
 ![](fig/install/1.png) 
+
+2. Install MySQL Server, and set **password** to root user (user`root` and the password are to be used in config.txt)
+![](fig/install/2.png) 
+![](fig/install/3.png) 
+
+3. Open MySQL command line Client, and Enter the **password** as you just set for `root` user.
+![](fig/install/4.png) 
+
+4. Copy the match_engine.dmp file to directory where mysql.exe is located (in this example, C:/Program Files/MySQL/MySQL Server 5.7/bin), and then run **source match_engine.dmp** in the MySQL command line client as shown below.
+![](fig/install/5.png) 
