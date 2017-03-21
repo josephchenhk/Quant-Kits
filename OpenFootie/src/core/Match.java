@@ -192,7 +192,7 @@ public class Match {
         
         // First half
         if (startTime < halfDuration) {
-            
+            //System.out.println("Return playTimeFrame!!!");
             return playTimeFrame(probModelPool, startTime, halfDuration);
             
         } else if (startTime == halfDuration) {
@@ -880,10 +880,13 @@ public class Match {
         int localCount = 0;
         matchRewind.reset();
         
+        //System.out.println(timerStart + ";" + timerEnd + "!!!"); // timerEnd = 250
         for (int timer = timerStart; timer < timerEnd; timer++) {
             
+        	//System.out.println(timer+"!!!");
             matchReport.setTimer(timer);
             
+            System.out.println("(" + timer + "). " + matchRewind.getCurrentSignal() + "!!!");
             // Process current signal
             if (matchRewind.getCurrentSignal() != null) {
                 
@@ -893,12 +896,16 @@ public class Match {
                 if (tempUpdateTime <= 0) tempUpdateTime = 1;
                 
                 if (timer != Match.halfDuration && timer != 2 * Match.halfDuration) {
+                	
+                	//System.out.println("A signal returns during the match");
                 
                     return matchRewind.getCurrentSignal();
                     
                 } else if (timer == Match.halfDuration) {
                     
                     Signal currentSignal = matchRewind.getCurrentSignal();
+                    
+                    //System.out.println("Match ended due to timer reaching half");
                     
                     Signal endOfHalf = new EndOfHalf(timer);
                     matchRewind.addSignal(endOfHalf);
@@ -909,7 +916,7 @@ public class Match {
                     
                     Signal currentSignal = matchRewind.getCurrentSignal();
                     
-                    // System.out.println("Match ended due to timer reaching end");
+                    //System.out.println("Match ended due to timer reaching end");
                     
                     Signal endOfMatch = new EndOfMatch(timer);
                     matchRewind.addSignal(endOfMatch);
@@ -944,6 +951,7 @@ public class Match {
             
             ++localCount;
             
+            //System.out.println(localCount + "," + timerStart + "," + tempUpdateTime + ":" + ((localCount + timerStart) % tempUpdateTime == 0) + "???");
             if ((localCount + timerStart) % tempUpdateTime == 0) {
                 
                 tempUpdateTime = reportUpdateTime; // Get back to default value
@@ -978,13 +986,20 @@ public class Match {
             
             int checkState = -1;
             
+            //System.out.println("candidateStates.size()=" + candidateStates.size());
             if (candidateStates.size() == 1) {
                 checkState = candidateStates.get(0);
             } else {
                 checkState = candidateStates.get(rnd.nextInt(candidateStates.size()));
             }
             
+            System.out.println("checkState="+checkState); // checkState is a number ranging from 0 to 249 here
+            
+            //System.out.println("matchRepresentation.get(checkState) = " + matchRepresentation.get(checkState));
+            //System.out.println(matchRepresentation.get(checkState).getClass().getName());
             nextState = processCurrentInstant(matchRepresentation.get(checkState));
+            System.out.println("nextState=" + nextState); // nextState=(South Korea,DEFENCE,AXIS,PRESSED)
+            
             
             matchReport.setCurrentState(nextState);
             
@@ -993,6 +1008,7 @@ public class Match {
             
             matchReport.submitEvent();
             matchReport.getCurrentEvent().setActionState(nextState);
+            
         }
         
         // Add end of half and end of match events for rewind
@@ -1274,7 +1290,7 @@ public class Match {
      */
     private State processCurrentInstant(Instant instant) {
         
-        // System.out.println("Processing instant: " + instant);
+        System.out.println("Processing instant: " + instant);
         
         // Keep track of ball possession
         matchReport.getCurrentState().getTeam().getStats().addPossession();
@@ -1302,7 +1318,7 @@ public class Match {
         
         double total = ownPace + oppPace;
         
-        double pressing = rnd.nextDouble() * total;
+        double pressing = rnd.nextDouble() * total;  // What is it for? random select pressed status ???
         
         if (pressing < ownPace) {
             pressed = false;
@@ -3725,7 +3741,7 @@ public class Match {
             // save id for easier debugging; it doesn't really mean a thing otherwise as ids with the same modulo are duplicated
             currentInstant.rowId = currentRow[Constants.ROW_ID]; 
             
-            // System.out.println(currentInstant);
+            // System.out.println(currentInstant + "!!!!!");
            
             matchRepresentation.add(currentInstant);
         }
@@ -3775,10 +3791,10 @@ public class Match {
                 
                 WrapperObject currentWO = new WrapperObject(loadedRow);
                 
-                System.out.println(currentWO + "???");
+                //System.out.println(currentWO + "???");
                 probModel.add(currentWO);
             }
-            System.out.println(probModel.size()+"!!!!!!!!!");
+            //probModel.size() = 250
             
             binaryInput.close();
             

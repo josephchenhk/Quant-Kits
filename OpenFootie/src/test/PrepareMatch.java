@@ -177,7 +177,7 @@ public class PrepareMatch {
             Match match = new Match(homeTeam, awayTeam);
             
             Signal currentSignal = match.play(0); // Kick off
-            // System.out.println(currentSignal);
+            System.out.println(currentSignal);
             
 /*            int count = 0;
             
