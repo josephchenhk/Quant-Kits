@@ -1318,7 +1318,7 @@ public class Match {
         
         double total = ownPace + oppPace;
         
-        double pressing = rnd.nextDouble() * total;  // What is it for? random select pressed status ???
+        double pressing = rnd.nextDouble() * total;  // What is it for?? random select pressed status ???
         
         if (pressing < ownPace) {
             pressed = false;
