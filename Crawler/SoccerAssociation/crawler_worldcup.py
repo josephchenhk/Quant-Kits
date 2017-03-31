@@ -59,8 +59,11 @@ class SoccerAssociation(object):
 #                    data_ready = True
 #                if data_ready:
 #                    print(date, home_team, hg, "-", ag, away_team)
-                    
-        for stage in self.round_2:
+          
+        knockout = (self.round_2 + self.quarter_final + self.semi_final  
+                    + self.third_fourth + self.final)
+        for stage in knockout:
+            print("---------------------\nStage {}".format(stage))
             url = self.base_url + stage + ".htm"
             page = self.download_page(url)
             soup = BeautifulSoup(page, "lxml")
@@ -90,8 +93,8 @@ class SoccerAssociation(object):
                         goal_times = {'home':[],"away":[]}
                         data_ready = False
                         if not self.is_goal_times(next_text):
-                            print("next_text:{}".format(next_text))
-                            print(self.is_goal_times(next_text),">???\n")
+                            #print("next_text:{}".format(next_text))
+                            #print(self.is_goal_times(next_text),">???\n")
                             data_ready = True
                     else:
                         if len(tds)==4:
@@ -122,19 +125,25 @@ class SoccerAssociation(object):
         try:
             int(text_str)
             return True
-        except ValueError:
+        except (ValueError,TypeError):
             return False
         
     def is_goal_times(self, td_text):
         
-        if td_text=="" or self.is_int(td_text):
-            return True
-        else:
+        if td_text==None:
+            return False
+        elif type(td_text)==str:
             td_text = td_text.split("(")[0]
+            if self.is_int(td_text) or td_text=="":
+                return True
+            else:
+                return False
         else:
+            print("td_text is neither None nor str type: {}".format(td_text))
             return False
     
     def download_page(self, url):
+        print(url)
         return requests.get(url, headers={
             "Host": "www.soccerassociation.com",
             "Connection": "keep-alive",
