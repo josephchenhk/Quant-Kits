@@ -19,8 +19,8 @@ import warnings
 class SoccerAssociation(object):
     
     def __init__(self, year=2014):
-        start = str((year - 1) - 2000)
-        end = str(year - 2000)
+        start = str((year - 1) - 2000).zfill(2)
+        end = str(year - 2000).zfill(2)
         self.base_url = ('http://www.soccerassociation.com/int/' + start + end +
                          '/WC,f/')
         self.WEEK = ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
@@ -37,28 +37,36 @@ class SoccerAssociation(object):
         
     def get_results(self):
         
-#        for stage in self.group_stage:
-#            url = self.base_url + stage + ".htm"
-#            page = self.download_page(url)
-#            soup = BeautifulSoup(page, "lxml")
-#            table = soup.find("table",{"cellspacing":"1", "cellpadding":"1", 
-#                                       "border":"0", "bgcolor":"#cccccc"})
-#            trs = table.find_all("tr")
-#            data_ready = False
-#            for tr in trs:
-#                text = tr.text.strip()
-#                if text.split(",")[0] in self.WEEK:
-#                    day, month, year = (text.split(",")[1].strip().split("\xa0"))
-#                    date = year + "-" + str(self.MONTH[month]) + "-" + day
-#                    data_ready = False
-#                else:
-#                    tds = tr.find_all("td")
-#                    home_team = tds[0].text.strip()
-#                    hg,ag = tds[1].text.strip().split("-")
-#                    away_team = tds[2].text.strip()
-#                    data_ready = True
-#                if data_ready:
-#                    print(date, home_team, hg, "-", ag, away_team)
+        df = pd.DataFrame(columns=["home_team_name","away_team_name",
+                                   "full_time_home_goal","full_time_away_goal",
+                                   "goal_times","match_date","week"])
+        i = 0    
+        for stage in self.group_stage:
+            print("---------------------\nStage {}".format(stage))
+            url = self.base_url + stage + ".htm"
+            page = self.download_page(url)
+            soup = BeautifulSoup(page, "lxml")
+            table = soup.find("table",{"cellspacing":"1", "cellpadding":"1", 
+                                       "border":"0", "bgcolor":"#cccccc"})
+            trs = table.find_all("tr")
+            data_ready = False
+            for tr in trs:
+                text = tr.text.strip()
+                if text.split(",")[0] in self.WEEK:
+                    day, month, year = (text.split(",")[1].strip().split("\xa0"))
+                    date = year + "-" + str(self.MONTH[month]) + "-" + day
+                    data_ready = False
+                else:
+                    tds = tr.find_all("td")
+                    home_team = tds[0].text.strip()
+                    hg,ag = tds[1].text.strip().split("-")
+                    away_team = tds[2].text.strip()
+                    goal_times = {'home':[],"away":[]}
+                    data_ready = True
+                if data_ready:
+                    print(date, home_team, hg, "-", ag, away_team, goal_times)
+                    df.loc[i] = [home_team, away_team, hg, ag, goal_times, date, None]
+                    i += 1
           
         knockout = (self.round_2 + self.quarter_final + self.semi_final  
                     + self.third_fourth + self.final)
@@ -119,7 +127,9 @@ class SoccerAssociation(object):
                             data_ready = True
                 if data_ready:
                     print(date, home_team, hg, "-", ag, away_team, goal_times, "\n")
-            
+                    df.loc[i] = [home_team, away_team, hg, ag, goal_times, date, None]
+                    i += 1
+        return df
         
     def is_int(self, text_str):
         try:
@@ -162,8 +172,12 @@ class SoccerAssociation(object):
 
 
 if __name__ == '__main__':
-    sa = SoccerAssociation(year=2014)
-    sa.get_results()
+    worldcup_year = 2002
+    sa = SoccerAssociation(year=worldcup_year)
+    df = sa.get_results()
     
+    writer = pd.ExcelWriter("goal_times_worldcup_year_"+str(worldcup_year)+".xlsx")
+    df.to_excel(writer,'goal_times',index=False)
+    writer.save()
 
 
