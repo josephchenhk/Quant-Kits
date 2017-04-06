@@ -59,8 +59,29 @@ class VirtualSports(object):
         xi = json.loads(xi)
         
         return alpha_h, beta_h, alpha_a, beta_a, gamma, lambda_, mu, rho, xi
+     
+    def run_virtual_match(self,league_id, home_team_id, away_team_id):
+        alpha_h, beta_h, alpha_a, beta_a, gamma, lambda_, mu, rho, xi = (
+                self.get_params(league_id, home_team_id, away_team_id)
+                )
+        NTimeStep = 541
+        timestamps = np.linspace(0,90*60,NTimeStep)
         
-        
+        hg = 0
+        ag = 0
+        for n in range(len(timestamps)-1):
+            t0 = timestamps[n]
+            t1 = timestamps[n+1]
+            dt = t1-t0
+            lambda_t0 = self.cal_lambda(t0, hg, ag, alpha_h, beta_a, gamma, lambda_, rho, xi)
+            mu_t0 = self.cal_lambda(t0, hg, ag, alpha_a, beta_h, 1.0, mu, rho, xi, False)
+            p_homeScore = (lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
+            p_awayScore = (1-lambda_t0[hg][ag]*dt) * (mu_t0[hg][ag]*dt)
+            p_noScore = (1-lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
+            print(lambda_t0[hg][ag])
+            #print(p_homeScore,p_awayScore,p_noScore,p_homeScore+p_awayScore+p_noScore)
+            
+                
     def get_pmatrix(self, league_id, home_team_id, away_team_id, t, hg, ag):
         alpha_h, beta_h, alpha_a, beta_a, gamma, lambda_, mu, rho, xi = (
                 self.get_params(league_id, home_team_id, away_team_id)
@@ -194,4 +215,5 @@ class VirtualSports(object):
 if __name__=="__main__":
     virtualSports = VirtualSports()
     pmatrix = virtualSports.get_pmatrix(36,24,58,0,0,0)
+    virtualSports.run_virtual_match(36,24,58)
     virtualSports.close()
