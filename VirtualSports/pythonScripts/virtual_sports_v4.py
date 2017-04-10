@@ -257,6 +257,7 @@ class VirtualSports(object):
             ag = kickoff_ag
             for n in range(len(timestamps)-1):
                 
+                #TODO: need to find a better way to describe the process.
                 rand_goal_event = random.random()
                 if rand_goal_event>0.7:
                     
