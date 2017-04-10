@@ -178,7 +178,7 @@ class VirtualSports(object):
      
     def run_virtual_match(self,league_id, home_team_id, away_team_id, 
                           kickoff_time=0, kickoff_hg=0, kickoff_ag=0,
-                          N_sim=1, NTimeStep = 540):
+                          N_sim=10000, NTimeStep = 540):
         alpha_h, beta_h, alpha_a, beta_a, gamma, lambda_, mu, rho, xi = (
                 self.get_params(league_id, home_team_id, away_team_id)
                 )
@@ -392,7 +392,7 @@ if __name__=="__main__":
     virtualSports = VirtualSports(load_params="json")
     
     #test_cases = [(0,0,0),(10,0,0),(10,1,0),(10,0,2),(15,3,1),(55,2,2)]
-    test_cases = [(15*60.,3,1)]
+    test_cases = [(65*60.,2,2)]
     for case in test_cases:
 #    kickoff_time = 0
 #    kickoff_hg = 0
