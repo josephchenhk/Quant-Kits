@@ -131,6 +131,14 @@ public class GoldenFlower {
 		}
 	}
 	
+	public int Rank2Point(int a){
+		if (a==1){
+			return (a+13);
+		}else{
+			return a;
+		}
+	}
+	
 	public Combo Compare(ArrayList<Integer> banker, ArrayList<Integer> player){
 		
 		ArrayList<Card> bankerCard = new ArrayList<Card>();
@@ -158,9 +166,132 @@ public class GoldenFlower {
 		System.out.println(bankerType);
 		System.out.println(playerType);
 		
+		int winner = 0;
+		if (bankerType!=playerType){
+			//scatter, pair, straight, flush, straightFlush, leopard, leopardKiller
+			if (bankerType=="leopardKiller"){
+				if (playerType=="leopard"){
+					winner = 1; 
+				}else{
+					winner = 2;
+				}
+			} else if (bankerType=="leopard"){
+				if (playerType=="leopardKiller"){
+					winner = 2;
+				}else{
+					winner = 1;
+				}
+			} else if (bankerType=="straightFlush"){
+				if (playerType=="leopard"){
+					winner = 2;
+				}else{
+					winner = 1;
+				}
+			} else if (bankerType=="flush"){
+				if ((playerType=="straightFlush") || (playerType=="leopard")){
+					winner = 2;
+				}else{
+					winner = 1;
+				}
+			} else if (bankerType=="straight"){
+				if ((playerType=="flush") || (playerType=="straightFlush") || (playerType=="leopard")){
+					winner = 2;
+				}else{
+					winner = 1;
+				}
+			} else if (bankerType=="pair"){
+				if ((playerType=="scatter") || (playerType=="leopardKiller") ){
+					winner = 1;
+				}else{
+					winner = 2;
+				}
+			} else if (bankerType=="scatter"){
+				if (playerType=="leopardKiller") {
+					winner = 1;
+				}else{
+					winner = 2;
+				}
+			}
+		} else if (bankerType==playerType){
+			
+			if (bankerType=="pair"){
+				int[] bankerRank = new int[3];
+				int[] playerRank = new int[3];
+				for (int i=0; i<3; i++){
+					bankerRank[i] = bankerCard.get(i).rank;
+					playerRank[i] = playerCard.get(i).rank;
+				}
+				//System.out.println(cardRank[0]+","+cardRank[1]+","+cardRank[2]);
+				Arrays.sort(bankerRank);
+				Arrays.sort(playerRank);
+				
+				int bankerSingle;
+				int playerSingle;
+				int bankerPair = bankerRank[1];
+				int playerPair = playerRank[1];
+				if (bankerRank[0]==bankerPair){
+					bankerSingle = bankerRank[2];
+				}else{
+					bankerSingle = bankerRank[0];
+				}
+				
+				if (playerRank[0]==playerPair){
+					playerSingle = playerRank[2];
+				}else{
+					playerSingle = playerRank[0];
+				}
+				
+				if (bankerPair!=playerPair){
+					if (Rank2Point(bankerPair)>Rank2Point(playerPair)){
+						winner = 1;
+					}else{
+						winner = 2;
+					}
+				}else{
+					if (Rank2Point(bankerSingle)>Rank2Point(playerSingle)){
+						winner = 1;
+					}else{
+						winner = 2;
+					}
+				}
+			}else {
+				int[] bankerPoint = new int[3];
+				int[] playerPoint = new int[3];
+				for (int i=0; i<3; i++){
+					bankerPoint[i] = Rank2Point(bankerCard.get(i).rank);
+					playerPoint[i] = Rank2Point(playerCard.get(i).rank);
+				}
+				//System.out.println(cardRank[0]+","+cardRank[1]+","+cardRank[2]);
+				Arrays.sort(bankerPoint);
+				Arrays.sort(playerPoint);
+				if (bankerPoint[2]>playerPoint[2]){
+					winner = 1;
+				}else if (bankerPoint[2]<playerPoint[2]){
+					winner = 2;
+				}else if (bankerPoint[1]>playerPoint[1]){
+					winner = 1;
+				}else if (bankerPoint[1]<playerPoint[1]){
+					winner = 2;
+				}else if (bankerPoint[0]>playerPoint[0]){
+					winner = 1;
+				}else if (bankerPoint[0]<playerPoint[0]){
+					winner = 2;
+				}else{
+					System.out.println("Tie!");
+				}
+			}
+		}
+		
 		Combo result = new Combo();
-		result.type = "scatter";
-		result.winner = 1;
+		//result.type = "scatter";
+		result.winner = winner;
+		if ((winner==1) || (winner==0)){
+			result.type = bankerType;
+		}else if (winner==2){
+			result.type = playerType;
+		}else{
+			System.out.println("Compare Result Error!");
+		}
 		return result;
 	}
 }
