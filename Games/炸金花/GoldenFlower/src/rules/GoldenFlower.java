@@ -27,13 +27,25 @@ public class GoldenFlower {
 		this.deck = shuffle_deck;
 	}
 	
-	public ArrayList<Integer> BankerDrawCards(){
+	// Draw three cards
+	public ArrayList<Integer> DrawCards(){
 		ArrayList<Integer> banker = new ArrayList<Integer>();
 		int start = 0;
 		for (int i=start; i<start+3; i++ ){
 			banker.add(this.deck.get(i));
+			this.deck.remove(this.deck.get(i));
 		}
 		return banker;
+	}
+	
+	/*
+	public ArrayList<Integer> BankerDrawCards(){
+		ArrayList<Integer> draw = new ArrayList<Integer>();
+		int start = 0;
+		for (int i=start; i<start+3; i++ ){
+			draw.add(this.deck.get(i));
+		}
+		return draw;
 	}
 	
 	public ArrayList<Integer> Player1DrawCards(){
@@ -71,6 +83,7 @@ public class GoldenFlower {
 		}
 		return banker;
 	}
+	*/
 	
 	/*
 	private static class Combo {

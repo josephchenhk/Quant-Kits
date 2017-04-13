@@ -23,11 +23,18 @@ public class TenThousandGame {
 	public TenThousandGame(){
 		GoldenFlower flower = new GoldenFlower();
 		
+		ArrayList<Integer> banker = flower.DrawCards();		
+		ArrayList<Integer> player1 = flower.DrawCards();		
+		ArrayList<Integer> player2 = flower.DrawCards();		
+		ArrayList<Integer> player3 = flower.DrawCards();		
+		ArrayList<Integer> player4 = flower.DrawCards();
+		/*
 		ArrayList<Integer> banker = flower.BankerDrawCards();		
 		ArrayList<Integer> player1 = flower.Player1DrawCards();		
 		ArrayList<Integer> player2 = flower.Player2DrawCards();		
 		ArrayList<Integer> player3 = flower.Player3DrawCards();		
 		ArrayList<Integer> player4 = flower.Player4DrawCards();
+		*/
 		
 		this.flower = flower;
 		this.banker = banker;

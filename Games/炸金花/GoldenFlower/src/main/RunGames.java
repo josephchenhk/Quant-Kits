@@ -2,6 +2,7 @@ package main;
 
 import java.util.ArrayList;
 import game.TenThousandGame;
+import game.DragonPhoenix;
 
 public class RunGames {
 	
@@ -9,6 +10,7 @@ public class RunGames {
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
+		/*
 		System.out.println("炸金花：萬人場");
 		int totalPay = 0;
 		int totalRec = 0; 
@@ -28,6 +30,14 @@ public class RunGames {
 		System.out.println("Total Pay: "+totalPay);
 		System.out.println("Total Receive: "+totalRec);
 		System.out.println("RTP: "+(totalRec*1.0/totalPay));
+		*/
+		
+		
+		System.out.println("炸金花：龍鳳對決");
+		for (int i=0; i<NUMSIM; i++){
+			DragonPhoenix game2 = new DragonPhoenix();
+		}
+		
 	}
 
 }
