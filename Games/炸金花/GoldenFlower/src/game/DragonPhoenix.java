@@ -32,7 +32,7 @@ public class DragonPhoenix {
 			return 9;
 		}else if (cardType=="straight") {
 			return 15;
-		}else if ((cardType=="pair") && (pairPoint>=8)) {
+		}else if ((cardType=="pair") && (pairPoint>8)) {
 			return 3;
 		}else{
 			return 0; // This should never happen, as long as cardType is correct.
@@ -55,18 +55,18 @@ public class DragonPhoenix {
 	public double WinBet(String[] betPlayer, double[] betAmount){
 		double pay = 0;
 		for (int i=0; i<betPlayer.length; i++){
-			System.out.println("------------------");
+			//System.out.println("------------------");
 			Combo result = this.flower.Compare(this.dragon, this.phoenix);
-			System.out.println(result.type+","+result.winner);
+			//System.out.println(result.type+","+result.winner);
 			if ((betPlayer[i]=="dragon") && ((result.winner==1) || (result.winner==0))){
 				double odd = WinOdds(result.winner);
-				System.out.println("Odd:"+odd);
+				//System.out.println("Odd:"+odd);
 				pay += (odd*betAmount[i]);
 			}
 			
 			if ((betPlayer[i]=="phoenix") && ((result.winner==2) || (result.winner==0))){
 				double odd = WinOdds(result.winner);
-				System.out.println("Odd:"+odd);
+				//System.out.println("Odd:"+odd);
 				pay += (odd*betAmount[i]);
 			}
 		}
@@ -77,12 +77,73 @@ public class DragonPhoenix {
 	public double TypeBet(String[] betType, double[] betAmount){
 		double pay = 0;
 		for (int i=0; i<betType.length; i++){
-			System.out.println("------------------");
+			//System.out.println("------------------");
 			Combo result = this.flower.Compare(this.dragon, this.phoenix);
-			System.out.println(result.type+","+result.winner);
+			//System.out.println(result.type+","+result.winner);
 			if (result.winner==0){
 				double odd = 1;
-				System.out.println("Tie! Odd:"+odd);
+				//System.out.println("Tie! Odd:"+odd);
+				pay += (odd*betAmount[i]);
+			}else if (betType[i]=="pair8") {				
+				int pairPoint = 0;
+				if (result.type=="pair"){
+					if (result.winner==1){
+						ArrayList<Card> card = this.flower.Int2Card(this.dragon);
+						pairPoint = this.flower.CheckPairPoint(card);
+					}else if (result.winner==2){
+						ArrayList<Card> card = this.flower.Int2Card(this.phoenix);
+						pairPoint = this.flower.CheckPairPoint(card);
+					}	
+					double odd = TypeOdds(result.type, pairPoint);
+					pay += (odd*betAmount[i]);
+				}else if ((result.type=="leopard") || (result.type=="straightFlush") || (result.type=="flush") || (result.type=="straight")){
+					double odd = TypeOdds("pair", 9);
+					pay += (odd*betAmount[i]);
+				}
+				//System.out.println("Odd:"+odd);
+				
+			}else if (betType[i]==result.type){
+				int pairPoint = 0;
+				double odd = TypeOdds(result.type, pairPoint);
+				pay += (odd*betAmount[i]);
+				
+				//To display the winner's cards:
+		/*		if (result.winner==1){
+					ArrayList<Card> card = this.flower.Int2Card(this.dragon);
+					for(int kk=0; kk<3; kk++){
+						Card c = card.get(kk);
+						System.out.print(c.rank + "," + c.suit);
+						System.out.print(" | ");
+					}
+					System.out.println();
+	
+				}else if (result.winner==2){
+					ArrayList<Card> card = this.flower.Int2Card(this.phoenix);
+					for(int kk=0; kk<3; kk++){
+						Card c = card.get(kk);
+						System.out.print(c.rank + "," + c.suit);
+						System.out.print(" | ");
+					}
+					System.out.println();
+					
+				}else{
+					System.out.println("Impossible!");
+				}*/
+				
+			}
+		}
+		return pay;		
+	}
+	
+/*	public double TypeBet(String[] betType, double[] betAmount){
+		double pay = 0;
+		for (int i=0; i<betType.length; i++){
+			//System.out.println("------------------");
+			Combo result = this.flower.Compare(this.dragon, this.phoenix);
+			//System.out.println(result.type+","+result.winner);
+			if (result.winner==0){
+				double odd = 1;
+				//System.out.println("Tie! Odd:"+odd);
 				pay += (odd*betAmount[i]);
 			}else if (betType[i]==result.type) {
 				int pairPoint = 0;
@@ -96,10 +157,10 @@ public class DragonPhoenix {
 					}					
 				}
 				double odd = TypeOdds(result.type, pairPoint);
-				System.out.println("Odd:"+odd);
+				//System.out.println("Odd:"+odd);
 				pay += (odd*betAmount[i]);
 			}
 		}
 		return pay;		
-	}
+	}*/
 }
