@@ -13,11 +13,20 @@ public class DragonPhoenix {
 	public ArrayList<Integer> phoenix;
 	
 	public DragonPhoenix(){
-		GoldenFlower flower = new GoldenFlower();		
-		ArrayList<Integer> dragon = flower.DrawCards();		
-		ArrayList<Integer> phoenix = flower.DrawCards();
-		
+		GoldenFlower flower = new GoldenFlower();	
 		this.flower = flower;
+		
+	/*	ArrayList<Integer> dragon = flower.DrawCards();		
+		ArrayList<Integer> phoenix = flower.DrawCards();		
+		this.dragon = dragon;
+		this.phoenix = phoenix;*/
+		
+		StartNewGame();
+	}
+	
+	public void StartNewGame(){
+		ArrayList<Integer> dragon = this.flower.DrawCards();		
+		ArrayList<Integer> phoenix = this.flower.DrawCards();
 		this.dragon = dragon;
 		this.phoenix = phoenix;
 	}
