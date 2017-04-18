@@ -3,6 +3,7 @@ package game;
 import java.util.ArrayList;
 
 import rules.GoldenFlower;
+import rules.GoldenFlower.Card;
 import utility.Combo;
 
 public class DragonPhoenix {
@@ -21,7 +22,7 @@ public class DragonPhoenix {
 		this.phoenix = phoenix;
 	}
 	
-	private static int TypeOdds(String cardType, int cardRank){
+	private static int TypeOdds(String cardType, int pairPoint){
 		//scatter, pair, straight, flush, straightFlush, leopard, leopardKiller
 		if (cardType=="leopard"){
 			return 150;
@@ -31,7 +32,7 @@ public class DragonPhoenix {
 			return 9;
 		}else if (cardType=="straight") {
 			return 15;
-		}else if ((cardType=="pair") && (cardRank>=8)) {
+		}else if ((cardType=="pair") && (pairPoint>=8)) {
 			return 3;
 		}else{
 			return 0; // This should never happen, as long as cardType is correct.
@@ -51,8 +52,8 @@ public class DragonPhoenix {
 		}
 	}
 	
-	public int WinBet(String[] betPlayer, int[] betAmount){
-		int pay = 0;
+	public double WinBet(String[] betPlayer, double[] betAmount){
+		double pay = 0;
 		for (int i=0; i<betPlayer.length; i++){
 			System.out.println("------------------");
 			Combo result = this.flower.Compare(this.dragon, this.phoenix);
@@ -72,5 +73,33 @@ public class DragonPhoenix {
 		return pay;
 		
 	}
-
+	
+	public double TypeBet(String[] betType, double[] betAmount){
+		double pay = 0;
+		for (int i=0; i<betType.length; i++){
+			System.out.println("------------------");
+			Combo result = this.flower.Compare(this.dragon, this.phoenix);
+			System.out.println(result.type+","+result.winner);
+			if (result.winner==0){
+				double odd = 1;
+				System.out.println("Tie! Odd:"+odd);
+				pay += (odd*betAmount[i]);
+			}else if (betType[i]==result.type) {
+				int pairPoint = 0;
+				if (result.type=="pair"){
+					if (result.winner==1){
+						ArrayList<Card> card = this.flower.Int2Card(this.dragon);
+						pairPoint = this.flower.CheckPairPoint(card);
+					}else if (result.winner==2){
+						ArrayList<Card> card = this.flower.Int2Card(this.phoenix);
+						pairPoint = this.flower.CheckPairPoint(card);
+					}					
+				}
+				double odd = TypeOdds(result.type, pairPoint);
+				System.out.println("Odd:"+odd);
+				pay += (odd*betAmount[i]);
+			}
+		}
+		return pay;		
+	}
 }
