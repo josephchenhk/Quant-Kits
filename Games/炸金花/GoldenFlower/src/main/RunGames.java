@@ -7,6 +7,7 @@ import game.DragonPhoenix;
 public class RunGames {
 	
 	private static int NUMSIM = 20000000;
+	private static int NUMGAME = 7; // number of games per deck
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
@@ -36,8 +37,15 @@ public class RunGames {
 		System.out.println("Õ¨½ð»¨£ºýˆøPŒ¦›Q");
 		double totalPay = 0;
 		double totalRec = 0; 
+		DragonPhoenix game2 = new DragonPhoenix();
 		for (int i=0; i<NUMSIM; i++){
-			DragonPhoenix game2 = new DragonPhoenix();
+			if (i%NUMGAME==0){
+				//System.out.println(i);
+				game2 = new DragonPhoenix();
+			}else{
+				game2.StartNewGame();
+			}
+			
 			
 			//bet player
 			String[] betPlayer = {"phoenix"}; //{"dragon","phoenix"};
