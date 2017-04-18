@@ -255,16 +255,25 @@ class VirtualSports(object):
                 print("Simulation {} finished.".format(_))
             hg = kickoff_hg
             ag = kickoff_ag
+            acc_dt = 0
             for n in range(len(timestamps)-1):
                 
+                t0 = timestamps[n]
+                t1 = timestamps[n+1]
+                dt = t1-t0
+                
                 #TODO: need to find a better way to describe the process.
-                rand_goal_event = random.random()
-                if rand_goal_event>0.7:
+                rand = random.random()
+                if rand>0.5:
+                    acc_dt += dt
+                    danger_attack = True
+                else:
+                    acc_dt += dt
+                    danger_attack = False
                     
-             
-                    t0 = timestamps[n]
-                    t1 = timestamps[n+1]
-                    dt = t1-t0
+                if danger_attack:
+                    
+                    dt = acc_dt*1.0
                     lambda_t0 = self.cal_lambda(t0, hg, ag, alpha_h, beta_a, gamma, lambda_, rho, xi)
                     mu_t0 = self.cal_lambda(t0, hg, ag, alpha_a, beta_h, 1.0, mu, rho, xi, False)
                     p_homeScore = (lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
@@ -282,6 +291,8 @@ class VirtualSports(object):
                         hg += 1
                     elif rand<=cum_prob[1]:
                         ag += 1
+                        
+                    acc_dt = 0.0
                         
                     if hg>9 or ag>9:
                         break
@@ -444,7 +455,7 @@ if __name__=="__main__":
     virtualSports = VirtualSports(load_params="json")
     
     #test_cases = [(0,0,0),(10,0,0),(10,1,0),(10,0,2),(15,3,1),(55,2,2)]
-    test_cases = [(0,0,0)]
+    test_cases = [(65*60.,2,2)]
     for case in test_cases:
 #    kickoff_time = 0
 #    kickoff_hg = 0
@@ -458,10 +469,10 @@ if __name__=="__main__":
         print("time : {}".format(time.time()-tic))
         virtualSports.close()
         
-        with open("prob_matrix_sample("+str(kickoff_time)+","+str(kickoff_hg)+","+str(kickoff_ag)+").csv","w") as f:
+        with open("prob_matrix_sample("+str(kickoff_time)+","+str(kickoff_hg)+","+str(kickoff_ag)+")_v4.csv","w") as f:
                 writer = csv.writer(f)
                 writer.writerows(pmatrix)
                 
-        with open("result_matrix_sample("+str(kickoff_time)+","+str(kickoff_hg)+","+str(kickoff_ag)+").csv","w") as f:
+        with open("result_matrix_sample("+str(kickoff_time)+","+str(kickoff_hg)+","+str(kickoff_ag)+")_v4.csv","w") as f:
                 writer = csv.writer(f)
                 writer.writerows(rmatrix)
