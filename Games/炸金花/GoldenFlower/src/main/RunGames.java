@@ -7,7 +7,7 @@ import game.DragonPhoenix;
 public class RunGames {
 	
 	private static int NUMSIM = 20000000;
-	private static int NUMGAME = 7; // number of games per deck
+	private static int NUMGAME = 6; // number of games per deck
 
 	public static void main(String[] args) {
 		// TODO Auto-generated method stub
