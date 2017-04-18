@@ -92,7 +92,7 @@ public class GoldenFlower {
 	}
 	*/
 	
-	private static class Card {
+	public static class Card {
 		String suit; // spade, heart, club, diamond
 	    int rank; // 1,2,3,4,5,6,7,8,9,10,11,12,13
 	}
@@ -142,6 +142,35 @@ public class GoldenFlower {
 		}else{
 			return "scatter";
 		}
+	}
+	
+	public int CheckPairPoint(ArrayList<Card> pairCard){
+		int[] cardRank = new int[3];
+		for (int i=0; i<3; i++){
+			cardRank[i] = pairCard.get(i).rank;
+		}
+		
+		int point = 0;
+		if (cardRank[0]==cardRank[1]){
+			point = Rank2Point(cardRank[0]); 
+		}else if (cardRank[0]==cardRank[2]){
+			point = Rank2Point(cardRank[0]); 
+		}else if (cardRank[1]==cardRank[2]){
+			point = Rank2Point(cardRank[1]); 
+		}else{
+			System.out.println("Error: Point should never be zero!");
+		}
+		
+		return point;
+	}
+	
+	public ArrayList<Card> Int2Card(ArrayList<Integer> cardInt){
+		ArrayList<Card> cardList = new ArrayList<Card>();
+		for (int i=0; i<3; i++){
+			Card card = Num2Card(cardInt.get(i));
+			cardList.add(card);
+		}
+		return cardList;
 	}
 	
 	public int Rank2Point(int a){
