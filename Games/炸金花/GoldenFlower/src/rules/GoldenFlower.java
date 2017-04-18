@@ -93,8 +93,8 @@ public class GoldenFlower {
 	*/
 	
 	public static class Card {
-		String suit; // spade, heart, club, diamond
-	    int rank; // 1,2,3,4,5,6,7,8,9,10,11,12,13
+		public String suit; // spade, heart, club, diamond
+	    public int rank; // 1,2,3,4,5,6,7,8,9,10,11,12,13
 	}
 	
 	public Card Num2Card(int a){
@@ -133,9 +133,13 @@ public class GoldenFlower {
 			return "leopard";
 		}else if ((cardSuit[0]==cardSuit[1]) && (cardSuit[1]==cardSuit[2]) && ((cardRank[0]+1)==cardRank[1]) && ((cardRank[1]+1)==cardRank[2])){
 			return "straightFlush";
+		}else if ((cardSuit[0]==cardSuit[1]) && (cardSuit[1]==cardSuit[2]) && (cardRank[0]==1) && (cardRank[1]==12) && (cardRank[2]==13)){
+			return "straightFlush";
 		}else if ((cardSuit[0]==cardSuit[1]) && (cardSuit[1]==cardSuit[2])){
 			return "flush";
 		}else if (((cardRank[0]+1)==cardRank[1]) && ((cardRank[1]+1)==cardRank[2])){
+			return "straight";
+		}else if ((cardRank[0]==1) && (cardRank[1]==12) && (cardRank[2]==13)){
 			return "straight";
 		}else if ((cardRank[0]==cardRank[1]) || (cardRank[0]==cardRank[2]) || (cardRank[1]==cardRank[2])){
 			return "pair";
@@ -173,7 +177,7 @@ public class GoldenFlower {
 		return cardList;
 	}
 	
-	public int Rank2Point(int a){
+	public static int Rank2Point(int a){
 		if (a==1){
 			return (a+13);
 		}else{
@@ -197,16 +201,20 @@ public class GoldenFlower {
 		for (int i=0; i<3; i++){
 			Card bcard = bankerCard.get(i);
 			Card pcard = playerCard.get(i);
-			System.out.print(bcard.rank + "," + bcard.suit);
+			
+		/*	System.out.print(bcard.rank + "," + bcard.suit);
 			System.out.print(" | ");
 			System.out.print(pcard.rank + "," + pcard.suit);
-			System.out.println();
+			System.out.println();*/
+			
 		} 
 		
 		String bankerType = CheckType(bankerCard);		
 		String playerType = CheckType(playerCard);
-		System.out.println(bankerType);
-		System.out.println(playerType);
+		
+	/*	System.out.println(bankerType);
+		System.out.println(playerType);*/
+		
 		
 		int winner = 0;
 		if (bankerType!=playerType){
@@ -318,8 +326,6 @@ public class GoldenFlower {
 					winner = 1;
 				}else if (bankerPoint[0]<playerPoint[0]){
 					winner = 2;
-				}else{
-					System.out.println("Tie!");
 				}
 			}
 		}
