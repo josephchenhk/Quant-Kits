@@ -176,69 +176,6 @@ class VirtualSports(object):
             total += x
             yield total
      
-#    def run_virtual_match(self,league_id, home_team_id, away_team_id, 
-#                          kickoff_time=0, kickoff_hg=0, kickoff_ag=0,
-#                          N_sim=1, NTimeStep = 540):
-#        alpha_h, beta_h, alpha_a, beta_a, gamma, lambda_, mu, rho, xi = (
-#                self.get_params(league_id, home_team_id, away_team_id)
-#                )
-#        
-#        timestamps = self.np.linspace(kickoff_time,90*60,NTimeStep)
-#        timestamps = [t*1.0/90./60. for t in timestamps] # normalized timestamps
-#        
-#        result_matrix = self.np.zeros((10,10))
-#        for _ in range(N_sim):
-#            if _%100==0:
-#                print("Simulation {} finished.".format(_))
-#            hg = kickoff_hg
-#            ag = kickoff_ag
-#            for n in range(len(timestamps)-1):
-#                # TODO: Is it reasonable to accumulate exceptions to the last element?
-##                hg = min(8,hg)
-##                ag = min(8,ag)
-#                
-#                t0 = timestamps[n]
-#                t1 = timestamps[n+1]
-#                dt = t1-t0
-#                lambda_t0 = self.cal_lambda(t0, hg, ag, alpha_h, beta_a, gamma, lambda_, rho, xi)
-#                mu_t0 = self.cal_lambda(t0, hg, ag, alpha_a, beta_h, 1.0, mu, rho, xi, False)
-#                p_homeScore = (lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
-#                p_awayScore = (1-lambda_t0[hg][ag]*dt) * (mu_t0[hg][ag]*dt)
-#                p_noScore = (1-lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
-##                if n<1:
-##                    print(lambda_t0[hg][ag], dt)
-##                    print("Before normalization:", p_homeScore,",", p_awayScore,",", p_noScore)
-#                p_sum = p_homeScore + p_awayScore + p_noScore
-#                p_homeScore = p_homeScore/p_sum
-#                p_awayScore = p_awayScore/p_sum
-#                p_noScore = p_noScore/p_sum
-#                #print(p_homeScore,p_awayScore,p_noScore,p_homeScore+p_awayScore+p_noScore)
-##                if n<1:
-##                    print("After normalization:", p_homeScore,",", p_awayScore,",", p_noScore)
-##                    print("\n")
-#
-##                if n<2:
-##                    print(self.np.multiply(dt,lambda_t0))
-##                    print("\n")
-#                cum_prob = list(self.np.accumulate([p_homeScore,p_awayScore,p_noScore]))
-#                rand = random.random()
-#                if rand<=cum_prob[0]:
-#                    #print("Home Score!")
-#                    hg += 1
-#                elif rand<=cum_prob[1]:
-#                    #print("Away Score!")
-#                    ag += 1
-#                    
-#                if hg>9 or ag>9:
-#                    break
-#            
-#            if hg<=9 and ag<=9:
-#                result_matrix[hg][ag] += 1
-#        
-#        factor = 1.0/sum([e for inner_lst in result_matrix for e in inner_lst])
-#        result_matrix = self.np.multiply(factor,result_matrix)
-#        return result_matrix
-        
     def run_virtual_match(self,league_id, home_team_id, away_team_id, 
                           kickoff_time=0, kickoff_hg=0, kickoff_ag=0,
                           N_sim=10000, NTimeStep = 540):
@@ -255,54 +192,54 @@ class VirtualSports(object):
                 print("Simulation {} finished.".format(_))
             hg = kickoff_hg
             ag = kickoff_ag
-            acc_dt = 0
             for n in range(len(timestamps)-1):
+                # TODO: Is it reasonable to accumulate exceptions to the last element?
+#                hg = min(8,hg)
+#                ag = min(8,ag)
                 
                 t0 = timestamps[n]
                 t1 = timestamps[n+1]
                 dt = t1-t0
-                
-                #TODO: need to find a better way to describe the process.
+                lambda_t0 = self.cal_lambda(t0, hg, ag, alpha_h, beta_a, gamma, lambda_, rho, xi)
+                mu_t0 = self.cal_lambda(t0, hg, ag, alpha_a, beta_h, 1.0, mu, rho, xi, False)
+                p_homeScore = (lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
+                p_awayScore = (1-lambda_t0[hg][ag]*dt) * (mu_t0[hg][ag]*dt)
+                p_noScore = (1-lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
+#                if n<1:
+#                    print(lambda_t0[hg][ag], dt)
+#                    print("Before normalization:", p_homeScore,",", p_awayScore,",", p_noScore)
+                p_sum = p_homeScore + p_awayScore + p_noScore
+                p_homeScore = p_homeScore/p_sum
+                p_awayScore = p_awayScore/p_sum
+                p_noScore = p_noScore/p_sum
+                #print(p_homeScore,p_awayScore,p_noScore,p_homeScore+p_awayScore+p_noScore)
+#                if n<1:
+#                    print("After normalization:", p_homeScore,",", p_awayScore,",", p_noScore)
+#                    print("\n")
+
+#                if n<2:
+#                    print(self.np.multiply(dt,lambda_t0))
+#                    print("\n")
+                cum_prob = list(self.np.accumulate([p_homeScore,p_awayScore,p_noScore]))
                 rand = random.random()
-                if rand>0.5:
-                    acc_dt += dt
-                    danger_attack = True
-                else:
-                    acc_dt += dt
-                    danger_attack = False
+                if rand<=cum_prob[0]:
+                    #print("Home Score!")
+                    hg += 1
+                elif rand<=cum_prob[1]:
+                    #print("Away Score!")
+                    ag += 1
                     
-                if danger_attack:
-                    
-                    dt = acc_dt*1.0
-                    lambda_t0 = self.cal_lambda(t0, hg, ag, alpha_h, beta_a, gamma, lambda_, rho, xi)
-                    mu_t0 = self.cal_lambda(t0, hg, ag, alpha_a, beta_h, 1.0, mu, rho, xi, False)
-                    p_homeScore = (lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
-                    p_awayScore = (1-lambda_t0[hg][ag]*dt) * (mu_t0[hg][ag]*dt)
-                    p_noScore = (1-lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
-    
-                    p_sum = p_homeScore + p_awayScore + p_noScore
-                    p_homeScore = p_homeScore/p_sum
-                    p_awayScore = p_awayScore/p_sum
-                    p_noScore = p_noScore/p_sum
-    
-                    cum_prob = list(self.np.accumulate([p_homeScore,p_awayScore,p_noScore]))
-                    rand = random.random()
-                    if rand<=cum_prob[0]:
-                        hg += 1
-                    elif rand<=cum_prob[1]:
-                        ag += 1
-                        
-                    acc_dt = 0.0
-                        
-                    if hg>9 or ag>9:
-                        break
+                if hg>9 or ag>9:
+                    break
             
             if hg<=9 and ag<=9:
                 result_matrix[hg][ag] += 1
         
         factor = 1.0/sum([e for inner_lst in result_matrix for e in inner_lst])
         result_matrix = self.np.multiply(factor,result_matrix)
-        return result_matrix        
+        return result_matrix
+        
+        
             
             
                 
@@ -469,10 +406,10 @@ if __name__=="__main__":
         print("time : {}".format(time.time()-tic))
         virtualSports.close()
         
-        with open("prob_matrix_sample("+str(kickoff_time)+","+str(kickoff_hg)+","+str(kickoff_ag)+")_v4.csv","w") as f:
+        with open("prob_matrix_sample("+str(kickoff_time)+","+str(kickoff_hg)+","+str(kickoff_ag)+").csv","w") as f:
                 writer = csv.writer(f)
                 writer.writerows(pmatrix)
                 
-        with open("result_matrix_sample("+str(kickoff_time)+","+str(kickoff_hg)+","+str(kickoff_ag)+")_v4.csv","w") as f:
+        with open("result_matrix_sample("+str(kickoff_time)+","+str(kickoff_hg)+","+str(kickoff_ag)+").csv","w") as f:
                 writer = csv.writer(f)
                 writer.writerows(rmatrix)
