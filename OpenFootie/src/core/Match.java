@@ -174,6 +174,7 @@ public class Match {
         if (startTime == 0) { // Kick-off
         
             loadProbModel();
+            //System.out.println("loadProbModel finished.");
         
             // Make probability model manipulation easier
             transformProbModel();
@@ -886,7 +887,7 @@ public class Match {
         	//System.out.println(timer+"!!!");
             matchReport.setTimer(timer);
             
-            System.out.println("(" + timer + "). " + matchRewind.getCurrentSignal() + "!!!");
+            System.out.println("\n(" + timer + "). " + matchRewind.getCurrentSignal() + "!!!");
             // Process current signal
             if (matchRewind.getCurrentSignal() != null) {
                 
@@ -1328,6 +1329,9 @@ public class Match {
         
         matchReport.getCurrentEvent().setAction(instant.Action);
         
+        //System.out.println("goalScoringAction(instant.Action) = goalScoringAction(" + instant.Action + ") = " + goalScoringAction(instant.Action));
+        
+        instant.Action = 7; // TEMP CHANGE: 7 for goal scoring action
         if (goalScoringAction(instant.Action)) {
             
             // System.out.println("Goal scoring action");
@@ -2402,6 +2406,13 @@ public class Match {
         //         matchReport.getCurrentState().getTeam().getShooting()};
         
         double [] abilityArray = {goalkeeping, finishing, shooting};
+        //System.out.println("abilityArray = " + abilityArray + " = {" + goalkeeping +"," + finishing +"," + shooting + "}");
+        System.out.print("abilityArray = ");
+        for (int aa=0; aa<abilityArray.length; aa++){
+        	System.out.print(abilityArray[aa]+",");
+        }   
+        System.out.println();
+        System.out.println(instant.Action + ";" + Constants.LongShot + ";" + Constants.AreaShot);
         
         int outcome = -1;
         switch(instant.Action) {
@@ -3773,6 +3784,9 @@ public class Match {
           
             // Constants.REC_SIZE = 19, currentRow = [B@799f7e29  ????
             byte [] currentRow = new byte[Constants.REC_SIZE];
+            //System.out.println("loadProbModel:" + currentRow + "; " + binaryInput.read(currentRow) +  "!!!!!");
+            
+            
             
             int currentSize = -1;
             // binaryInput.read(currentRow) = 19

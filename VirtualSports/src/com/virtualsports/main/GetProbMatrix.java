@@ -17,7 +17,7 @@ public class GetProbMatrix {
 		int awayTeam_id = 24;
 		int hg = 2;
 		int ag = 1;
-		double t = 24.0;
+		double t = 35.0;
 		ArrayList<HashMap<String,Object>> homeTeamParams;
 		ArrayList<HashMap<String,Object>> awayTeamParams;
 		ArrayList<HashMap<String,Object>> leagueParams;
@@ -93,7 +93,9 @@ public class GetProbMatrix {
 		ProbMatrix pm = new ProbMatrix();
 		double[][] pMatrix;
 		pMatrix = pm.getProbMatrix(alphaH, betaH, alphaA, betaA, gamma, lambda, mu, rho, xi, hg, ag);
-		System.out.println(pMatrix[0][0]);
+		
+		
+		System.out.println();
 	}
 
 

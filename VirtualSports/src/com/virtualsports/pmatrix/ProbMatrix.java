@@ -15,7 +15,7 @@ public class ProbMatrix {
 		System.out.println("xi:"+xi);
 		System.out.println("hg vs ag:"+hg+" vs "+ag);
 		
-		
+		pMatrix[hg][ag] = 1;
 		
 		return pMatrix;
 	}

@@ -124,6 +124,7 @@ public class PrepareMatch {
             
             String homeTeamName = homeTeamRS.getString("Name");
             String awayTeamName = awayTeamRS.getString("Name");
+            System.out.println(homeTeamName + " vs " + awayTeamName);
             
             Team homeTeam = new Team(homeTeamName);
             Team awayTeam = new Team(awayTeamName);
@@ -174,6 +175,7 @@ public class PrepareMatch {
             
             System.out.println();
             
+            //System.out.println(homeTeam + " vs " + awayTeam);
             Match match = new Match(homeTeam, awayTeam);
             
             Signal currentSignal = match.play(0); // Kick off

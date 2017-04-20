@@ -4,7 +4,8 @@ Created on Thu Apr  6 10:26:51 2017
 
 @author: joseph.chen
 """
-
+import time
+import random
 import json
 import statsmodels.api as sm
 import numpy as np
@@ -59,27 +60,57 @@ class VirtualSports(object):
         xi = json.loads(xi)
         
         return alpha_h, beta_h, alpha_a, beta_a, gamma, lambda_, mu, rho, xi
+    
+    def accumulate(self, lis):
+        total = 0
+        for x in lis:
+            total += x
+            yield total
      
-    def run_virtual_match(self,league_id, home_team_id, away_team_id):
+    def run_virtual_match(self,league_id, home_team_id, away_team_id, 
+                          N_sim=1, NTimeStep = 541):
         alpha_h, beta_h, alpha_a, beta_a, gamma, lambda_, mu, rho, xi = (
                 self.get_params(league_id, home_team_id, away_team_id)
                 )
-        NTimeStep = 541
-        timestamps = np.linspace(0,90*60,NTimeStep)
         
-        hg = 0
-        ag = 0
-        for n in range(len(timestamps)-1):
-            t0 = timestamps[n]
-            t1 = timestamps[n+1]
-            dt = t1-t0
-            lambda_t0 = self.cal_lambda(t0, hg, ag, alpha_h, beta_a, gamma, lambda_, rho, xi)
-            mu_t0 = self.cal_lambda(t0, hg, ag, alpha_a, beta_h, 1.0, mu, rho, xi, False)
-            p_homeScore = (lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
-            p_awayScore = (1-lambda_t0[hg][ag]*dt) * (mu_t0[hg][ag]*dt)
-            p_noScore = (1-lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
-            print(lambda_t0[hg][ag])
-            #print(p_homeScore,p_awayScore,p_noScore,p_homeScore+p_awayScore+p_noScore)
+        timestamps = np.linspace(0,90*60,NTimeStep)
+        timestamps = [t*1.0/90./60. for t in timestamps] # normalized timestamps
+        
+        result_matrix = np.zeros((10,10))
+        for _ in range(N_sim):
+            if _%100==0:
+                print("Simulation {} finished.".format(_))
+            hg = 0
+            ag = 0
+            for n in range(len(timestamps)-1):
+                # TODO: Is it reasonable to accumulate exceptions to the last element?
+                hg = min(9,hg)
+                ag = min(9,ag)
+                t0 = timestamps[n]
+                t1 = timestamps[n+1]
+                dt = t1-t0
+                lambda_t0 = self.cal_lambda(t0, hg, ag, alpha_h, beta_a, gamma, lambda_, rho, xi)
+                mu_t0 = self.cal_lambda(t0, hg, ag, alpha_a, beta_h, 1.0, mu, rho, xi, False)
+                p_homeScore = (lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
+                p_awayScore = (1-lambda_t0[hg][ag]*dt) * (mu_t0[hg][ag]*dt)
+                p_noScore = (1-lambda_t0[hg][ag]*dt) * (1-mu_t0[hg][ag]*dt)
+                p_sum = p_homeScore + p_awayScore + p_noScore
+                p_homeScore = p_homeScore/p_sum
+                p_awayScore = p_awayScore/p_sum
+                p_noScore = p_noScore/p_sum
+                #print(p_homeScore,p_awayScore,p_noScore,p_homeScore+p_awayScore+p_noScore)
+                cum_prob = list(self.accumulate([p_homeScore,p_awayScore,p_noScore]))
+                rand = random.random()
+                if rand<=cum_prob[0]:
+                    #print("Home Score!")
+                    hg += 1
+                elif rand<=cum_prob[1]:
+                    #print("Away Score!")
+                    ag += 1
+            result_matrix[hg][ag] += 1
+        result_matrix = result_matrix*1.0/sum(sum(result_matrix))
+        print(result_matrix)
+            
             
                 
     def get_pmatrix(self, league_id, home_team_id, away_team_id, t, hg, ag):
@@ -215,5 +246,7 @@ class VirtualSports(object):
 if __name__=="__main__":
     virtualSports = VirtualSports()
     pmatrix = virtualSports.get_pmatrix(36,24,58,0,0,0)
+    tic = time.time()
     virtualSports.run_virtual_match(36,24,58)
+    print("time : {}".format(time.time()-tic))
     virtualSports.close()
