@@ -233,6 +233,7 @@ class VirtualSports(object):
                         p_noScore = p_noScore/p_sum
         
                         cum_prob = list(self.np.accumulate([p_homeScore,p_noScore]))
+                        cum_prob = [p/sum(cum_prob) for p in cum_prob]
                         rand = random.random()
                         if rand<=cum_prob[0]:
                             hg += 1
@@ -264,6 +265,7 @@ class VirtualSports(object):
                         p_noScore = p_noScore/p_sum
         
                         cum_prob = list(self.np.accumulate([p_awayScore,p_noScore]))
+                        cum_prob = [p/sum(cum_prob) for p in cum_prob]
                         rand = random.random()
                         if rand<=cum_prob[0]:
                             ag += 1
