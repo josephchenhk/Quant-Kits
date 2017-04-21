@@ -4,6 +4,7 @@
 #
 # An implementation of matrix factorization
 #
+# Ref: http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial-and-implementation-in-python/
 import numpy as np
 
 ###############################################################################
@@ -42,19 +43,23 @@ import numpy as np
 #            break
 #    return P, Q.T
 
-def matrix_factorization(R, P, Q, K, steps=500000, alpha=0.0002, beta=0.02):
+def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.0002, beta=0.02):
     Q = Q.T
     for step in range(steps):
         e = 0
+        N = 0
         for i in range(len(R)):
             for j in range(len(R[i])):
                 if R[i][j] > 0:
+                    N += 1.0
                     eij = R[i][j] - np.dot(P[i,:],Q[:,j])
                     e = e + pow(eij,2)
                     for k in range(K):
                         P[i][k] = P[i][k] + alpha * (2 * eij * Q[k][j] - beta * P[i][k])
                         Q[k][j] = Q[k][j] + alpha * (2 * eij * P[i][k] - beta * Q[k][j])
                         e = e + (beta/2) * ( pow(P[i][k],2) + pow(Q[k][j],2) )
+        e = np.sqrt(e/N)    
+                    
         print(e)
         if e < 0.01:
             break

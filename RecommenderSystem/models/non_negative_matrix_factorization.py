@@ -42,7 +42,8 @@ def factor(V, r, iterations=100):
 
     for i in range(iterations):
         WH = W.dot(H)
-        divergence = sum(sum(V * np.log(V/WH) - V + WH)) # equation (3)
+        #divergence = sum(sum(V * np.log(V/WH) - V + WH)) # equation (3)
+        divergence = sum(sum(pow(V - WH,2)))  # equation (2)
         print("At iteration " + str(i) + ", the Kullback-Liebler divergence is", divergence)
         W,H = update(V, W, H, r, n, m)
 
@@ -61,13 +62,13 @@ if __name__=="__main__":
         ]
     
     # This method requires that elements in R matrix must be positive
-    R = [
-         [5,3,2,1],
-         [4,2,2,1],
-         [1,1,2,5],
-         [1,2,2,4],
-         [2,1,5,4],
-        ]
+#    R = [
+#         [5,3,2,1],
+#         [4,2,2,1],
+#         [1,1,2,5],
+#         [1,2,2,4],
+#         [2,1,5,4],
+#        ]
 
     R = np.array(R)
     
