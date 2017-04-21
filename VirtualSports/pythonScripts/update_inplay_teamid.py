@@ -84,39 +84,39 @@ class UpdateInplayTeamID(object):
         
         print(goal_times)
 
-#        for g in goal_times[:]:
-#            #print(g)
-#            g_id = g[0]
-#            home_name = g[1]
-#            away_name = g[2]
-#            league_id_h, home_id = self.mapp[home_name]
-#            league_id_a, away_id = self.mapp[away_name]
-#            if league_id_h==league_id_a:
-#                # TODO: Here we choose to update all records to league_id=36.
-#                # Still not a perfect solution. (Should be league_id_h ???)
-#                query = ("UPDATE `goal_times` " +
-#                         "SET league_id={}, ".format(75) +
-#                         "home_team_id={}, ".format(home_id) +
-#                         "away_team_id={} ".format(away_id) +
-#                         "WHERE goal_times_id={}".format(g_id)
-#                        )
-#                #print("1. >> {}".format(query))
-#                self.sql.execute(query)
-#                self.sql.commit()
-#            else:
-#                # TODO: How to deal with the special cases where tournament
-#                # had been downgraded ?
-#                # Temperally set all special case to league_id=36.
-#                # Need to find a better solution in the future.
-#                query = ("UPDATE `goal_times` " +
-#                         "SET league_id={}, ".format(75) +
-#                         "home_team_id={}, ".format(home_id) +
-#                         "away_team_id={} ".format(away_id) +
-#                         "WHERE goal_times_id={}".format(g_id)
-#                        )
-#                #print("2. >> {}".format(query))
-#                self.sql.execute(query)
-#                self.sql.commit()
+        for g in goal_times[:]:
+            #print(g)
+            g_id = g[0]
+            home_name = g[1]
+            away_name = g[2]
+            league_id_h, home_id = self.mapp[home_name]
+            league_id_a, away_id = self.mapp[away_name]
+            if league_id_h==league_id_a:
+                # TODO: Here we choose to update all records to league_id=36.
+                # Still not a perfect solution. (Should be league_id_h ???)
+                query = ("UPDATE `goal_times` " +
+                         "SET league_id={}, ".format(91) +
+                         "home_team_id={}, ".format(home_id) +
+                         "away_team_id={} ".format(away_id) +
+                         "WHERE goal_times_id={}".format(g_id)
+                        )
+                #print("1. >> {}".format(query))
+                self.sql.execute(query)
+                self.sql.commit()
+            else:
+                # TODO: How to deal with the special cases where tournament
+                # had been downgraded ?
+                # Temperally set all special case to league_id=36.
+                # Need to find a better solution in the future.
+                query = ("UPDATE `goal_times` " +
+                         "SET league_id={}, ".format(91) +
+                         "home_team_id={}, ".format(home_id) +
+                         "away_team_id={} ".format(away_id) +
+                         "WHERE goal_times_id={}".format(g_id)
+                        )
+                #print("2. >> {}".format(query))
+                self.sql.execute(query)
+                self.sql.commit()
                 
             
             

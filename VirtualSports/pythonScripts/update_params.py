@@ -15,12 +15,12 @@ class UpdateParams(object):
     
     def __init__(self):
         try:
-            self.params = sm.load("estimates/estimated_params_36.pickle")
+            self.params = sm.load("estimates/estimated_params_91_2014.pickle")
         except TypeError:
             raise TypeError("The estimated_params.pickle file is NOT in current directory.")
             
         try:
-            with open("estimates/estimated_teams_36.json","r") as f:
+            with open("estimates/estimated_teams_91_2014.json","r") as f:
                 self.teams = json.load(f)
         except TypeError:
             raise TypeError("The estimated_teams.pkl file is NOT in current directory.")
@@ -40,6 +40,7 @@ class UpdateParams(object):
         
     def parse_params(self):
         results = self.params
+        print(results.summary())
         alpha_indept = results.params[0:self.num_team-1]
         alpha_last = self.num_team - sum(alpha_indept)
         alpha = list(alpha_indept) + [alpha_last]
@@ -83,7 +84,7 @@ class UpdateParams(object):
 #            mu = [float(m) for m in mu]
 #            rho = [float(r) for r in rho]
 #            xi = [float(x) for x in xi]
-
+            
             ## ALERT: Exponentiate all parameters
             alpha = [np.exp(float(a)) for a in alpha]
             beta = [np.exp(float(b)) for b in beta]
@@ -107,34 +108,35 @@ class UpdateParams(object):
         
         
     def upload_params(self, league_id):
-        query = ("INSERT INTO `inplay_league_params` " +
-                 "(league_id, gamma, lambda, mu, rho, xi) " +
-                 "VALUES (%s, %s, %s, %s, %s, %s) ")
-        lambda_str = json.dumps(self.lambda_)
-        mu_str = json.dumps(self.mu)
-        rho_str = json.dumps(self.rho)
-        xi_str = json.dumps(self.xi)
-        params = (int(league_id), float(self.gamma), lambda_str, mu_str, 
-                  rho_str, xi_str)
-        self.sql.execute(query,params)        
-        team_ids = self.get_team_ids(league_id)
-        for n, team_name in enumerate(self.teams):
-            alpha = self.alpha[n]
-            beta = self.beta[n]
-            team_id = [t[1] for t in team_ids if t[0]==team_name][0]
-            query = ("INSERT INTO `inplay_team_params` " +
-                     "(league_id, team_id, team_name, alpha, beta) " +
-                     "VALUES (%s, %s, %s, %s, %s) ")
-            params = (int(league_id), int(team_id), str(team_name), 
-                      float(alpha), float(beta))
-            self.sql.execute(query,params)
-            
-        self.sql.commit()
+        pass
+#        query = ("INSERT INTO `inplay_league_params` " +
+#                 "(league_id, gamma, lambda, mu, rho, xi) " +
+#                 "VALUES (%s, %s, %s, %s, %s, %s) ")
+#        lambda_str = json.dumps(self.lambda_)
+#        mu_str = json.dumps(self.mu)
+#        rho_str = json.dumps(self.rho)
+#        xi_str = json.dumps(self.xi)
+#        params = (int(league_id), float(self.gamma), lambda_str, mu_str, 
+#                  rho_str, xi_str)
+#        self.sql.execute(query,params)        
+#        team_ids = self.get_team_ids(league_id)
+#        for n, team_name in enumerate(self.teams):
+#            alpha = self.alpha[n]
+#            beta = self.beta[n]
+#            team_id = [t[1] for t in team_ids if t[0]==team_name][0]
+#            query = ("INSERT INTO `inplay_team_params` " +
+#                     "(league_id, team_id, team_name, alpha, beta) " +
+#                     "VALUES (%s, %s, %s, %s, %s) ")
+#            params = (int(league_id), int(team_id), str(team_name), 
+#                      float(alpha), float(beta))
+#            self.sql.execute(query,params)
+#            
+#        self.sql.commit()
             
 
 if __name__=="__main__":
     updateParams = UpdateParams()
     #print(updateParams.params.summary())
     #updateParams.get_team_ids(36)
-    updateParams.upload_params(36)
+    updateParams.upload_params(91)
     updateParams.close()
