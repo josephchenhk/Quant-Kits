@@ -11,6 +11,7 @@ Ref: http://www.quuxlabs.com/blog/2010/09/matrix-factorization-a-simple-tutorial
 """
 
 import numpy as np
+import copy
 import random
 
 ###############################################################################
@@ -49,7 +50,7 @@ import random
 #            break
 #    return P, Q.T
 
-def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.02, beta=0.02):
+def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.0002, beta=0.02):
     Q = Q.T
     for step in range(steps):
         e = 0
@@ -70,8 +71,8 @@ def matrix_factorization(R, P, Q, K, steps=5000, alpha=0.02, beta=0.02):
         if e < 0.01:
             break
     
-    print("Number of iteration:",step+1)
-    print("Precision:",e)
+#    print("Number of iteration:",step+1)
+#    print("Precision:",e)
             
     return P, Q.T
 #
@@ -130,23 +131,75 @@ def betting(R,k):
         prob = []
         for q in questions:
             prob.append(R[k][q])
-        prob = [p/sum(prob) for p in prob]
+        if sum(prob)!=0:
+            prob = [p/sum(prob) for p in prob]
+        else:
+            prob = [1./len(prob) for p in prob]
         question = random_pick(questions, prob)
         bet[k][question] += 1    
     return bet
 
+def RR2R(RR,max_rating,min_rating): # Raw R to R
+    N,M = RR.shape
+    max_raw = np.amax(RR)
+    R = copy.deepcopy(RR)
+    for n in range(N):
+        for m in range(M):
+            R[n][m] = RR[n][m]*max_rating/max_raw
+    R = np.maximum(R,min_rating)
+    return R
+
+def R2RR(R,total_wager):  # R to Raw R
+    N,M = R.shape
+    total_rating = sum(sum(R))
+    RR = copy.deepcopy(R)
+    for n in range(N):
+        for m in range(M):
+            RR[n][m] = R[n][m]*total_wager/total_rating
+    return RR
+ 
+
+
+def updateRR(RR, bet):
+    return RR+bet
+
 ###############################################################################
 
 if __name__ == "__main__":
-    R = [
-         [5,3,0,1],
-         [4,0,0,1],
-         [1,1,0,5],
-         [1,0,0,4],
-         [0,1,5,4],
-        ]
+    
+    num_room = 5
+    num_question = 4
+    max_rating = 5
+    min_rating = 0
+    init_wager = 1000.  # assume initial 
+    
+#    R = [
+#         [5,3,0,1],
+#         [4,0,0,1],
+#         [1,1,0,5],
+#         [1,0,0,4],
+#         [0,1,5,4],
+#        ]
+#    R = np.array(R)
 
-    R = np.array(R)
+#    R = [[ 3.,  0.,  0.,  0.],
+#         [ 2.,  2.,  4.,  2.],
+#         [ 1.,  5.,  3.,  5.],
+#         [ 5.,  3.,  0.,  3.],
+#         [ 4.,  0.,  1.,  1.]]
+#    R = np.array(R)
+
+    # R: rating matrix with maximum rating
+    R = np.zeros((num_room, num_question)) 
+    for n in range(num_room):
+        for m in range(num_question):
+            R[n][m] = random.sample(range(max_rating+1),1)[0]
+    print(R)  
+    
+    # raw R: dollar matrix that represents the popularity of questions
+    RR = R2RR(R,init_wager)
+    #print(RR)
+    
 
     N = len(R)
     M = len(R[0])
@@ -157,12 +210,17 @@ if __name__ == "__main__":
 
     nP, nQ = matrix_factorization(R, P, Q, K)
     nR = np.dot(nP, nQ.T)
-    print(nR)
+    nR = RR2R(nR,max_rating,min_rating)
     
+    print("\nStart")
     for n in range(3): # number of update
-        for m in range(len(nR)): # match (chatroom)
-            bet = betting(nR,m)
-            print("After Game {}".format(n+1))
-            print(bet)
-            print("\n")
+        for k in range(len(nR)): # match (chatroom)
+            bet = betting(nR,k)
+            RR = updateRR(RR,bet)
+            R = RR2R(RR,max_rating,min_rating)
+            nP, nQ = matrix_factorization(R, P, Q, K)
+            nR = np.dot(nP, nQ.T)
+            nR = RR2R(nR,max_rating,min_rating)
+        print(R)
+        print("\n")
         
