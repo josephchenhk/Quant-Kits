@@ -18,6 +18,7 @@ import re, random, types
 import requests
 import csv
 import codecs
+from selenium import webdriver
 
 from bs4 import BeautifulSoup 
 
@@ -156,6 +157,10 @@ class GoogleAPI:
         else:
             pages = num / results_per_page + 1
 
+        # web driver
+        #driver = webdriver.PhantomJS()
+        driver = webdriver.Chrome()
+    
         for p in range(0, pages):
             start = p * results_per_page 
             url = '%s/search?hl=%s&num=%d&start=%s&q=%s' % (base_url, lang, results_per_page, start, query)
@@ -163,20 +168,21 @@ class GoogleAPI:
             retry = 5
             while(retry > 0):
                 try:
-                    #request = urllib2.Request(url)
-                    length = len(user_agents)
-                    index = random.randint(0, length-1)
-                    user_agent = user_agents[index]
-                    header_info = {}
-                    header_info['User-agent'] = user_agent
-                    header_info['connection'] = 'keep-alive'
-                    header_info['Accept-Encoding'] = 'gzip'
-                    header_info['referer'] = base_url
-                    response = requests.get(url, headers=header_info)
-                    html = response.text
-                    #print(chardet.detect(html))
-#                    if(response.headers.get('content-encoding', None) == 'gzip'):
-#                        html = gzip.GzipFile(fileobj=StringIO.StringIO(html)).read()
+#                    length = len(user_agents)
+#                    index = random.randint(0, length-1)
+#                    user_agent = user_agents[index]
+#                    header_info = {}
+#                    header_info['User-agent'] = user_agent
+#                    header_info['connection'] = 'keep-alive'
+#                    header_info['Accept-Encoding'] = 'gzip'
+#                    header_info['referer'] = base_url
+#                    response = requests.get(url, headers=header_info)
+#                    html = response.text
+                    
+                    driver.get(url)
+                    sleeptime =  random.randint(5, 30) + random.random()
+                    time.sleep(sleeptime)
+                    html = driver.page_source
 
                     results = self.extractSearchResults(html)
                     search_results.extend(results)
@@ -192,6 +198,8 @@ class GoogleAPI:
                     retry = retry - 1
                     self.randomSleep()
                     continue
+            
+        driver.quit()
         return search_results 
 
 def load_user_agent():
