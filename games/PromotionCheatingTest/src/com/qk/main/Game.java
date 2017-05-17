@@ -1,7 +1,14 @@
 package com.qk.main;
 
 import java.util.Random;
-import java.lang.Math;
+
+/*
+ * This is a simple code to test the optimal betting strategies for players:
+ * If given a free bonus, player are not allowed to cash out the free bonus until his total bet
+ * reaches (N x bonus).
+ * This is a simplified game (coin game), where the player have 50% chance to win $1.95 back and
+ * 50% chance to get nothing for every dollar he bets.
+ */
 
 public class Game {
 	
