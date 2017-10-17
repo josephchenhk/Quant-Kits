@@ -5,7 +5,9 @@ Created on Wed Oct 11 14:16:53 2017
 @author: joseph.chen
 """
 
-from slot import Slot
+#from slot import Slot
+# TODO: slot2 is for debug purpose only.
+from slot2 import Slot
 from settings import Num_Sim, Bet, Weight_For_MainGame, Weight_For_FreeGame
 
 def main():
@@ -22,18 +24,28 @@ def main():
         slot.set_reel(slot.main_game_reels, Weight_For_MainGame)
         slot.spin()
         #print(slot.window)
-        game_type1, payment1, game_type2, payment2 = slot.check_results()
-        payment = payment1 + payment2
+#        game_type1, payment1, game_type2, payment2 = slot.check_results()
+#        payment = payment1 + payment2
+#        total_placement += Bet
+#        total_payment += payment*(Bet/slot.num_lines)
+#        if game_type1=="MG" and game_type2=="MG_Dog_Respin":
+#            total_MG_payment += payment1*(Bet/slot.num_lines)
+#            total_MG_Dog_Respin_payment += payment2*(Bet/slot.num_lines)
+#        elif game_type1=="FG" and game_type2=="FG_Dog_Respin":
+#            total_FG_payment += payment1*(Bet/slot.num_lines)
+#            total_FG_Dog_Respin_payment += payment2*(Bet/slot.num_lines)
+#        else:
+#            print("Error!")
+
+        MG_payment, MG_Dog_Respin_payment, FG_payment, FG_Dog_Respin_payment = slot.check_results()
         total_placement += Bet
-        total_payment += payment*(Bet/slot.num_lines)
-        if game_type1=="MG" and game_type2=="MG_Dog_Respin":
-            total_MG_payment += payment1*(Bet/slot.num_lines)
-            total_MG_Dog_Respin_payment += payment2*(Bet/slot.num_lines)
-        elif game_type1=="FG" and game_type2=="FG_Dog_Respin":
-            total_FG_payment += payment1*(Bet/slot.num_lines)
-            total_FG_Dog_Respin_payment += payment2*(Bet/slot.num_lines)
-        else:
-            print("Error!")
+        total_payment += ((MG_payment + MG_Dog_Respin_payment + FG_payment + FG_Dog_Respin_payment)
+                         * (Bet/slot.num_lines)
+                         )
+        total_MG_payment += MG_payment*(Bet/slot.num_lines)
+        total_MG_Dog_Respin_payment += MG_Dog_Respin_payment*(Bet/slot.num_lines)
+        total_FG_payment += FG_payment*(Bet/slot.num_lines)
+        total_FG_Dog_Respin_payment += FG_Dog_Respin_payment*(Bet/slot.num_lines)
         
     print("Total placement: {:.2f}".format(total_placement))
     print("Total payment: {:.2f}+{:.2f}+{:.2f}+{:.2f} = {:.2f}".format(total_MG_payment,
