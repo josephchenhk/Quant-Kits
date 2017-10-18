@@ -39,6 +39,7 @@ public class CardOfMultiDeck{
 		this.card = card;
 	} 
 	
+	/*
 	public int Pop(Map<Integer,List<Integer>> card){
 		
 		Random rand = new Random();
@@ -51,7 +52,16 @@ public class CardOfMultiDeck{
 		//card.remove(rand_num); 
 		return rand_num;
 	}
+	*/
 	
+	public List<Integer> Draw(Map<Integer,List<Integer>> card){
+		Random rand = new Random();
+		int rand_idx = rand.nextInt(card.keySet().size());
+		int rand_num = (Integer) card.keySet().toArray()[rand_idx];
+		List<Integer> c = card.get(rand_num);
+		card.remove(rand_num);
+		return c;
+	}
 	
 } 
 
