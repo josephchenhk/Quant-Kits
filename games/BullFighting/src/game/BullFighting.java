@@ -7,8 +7,6 @@ import java.util.List;
 import cards.Card;
 import cards.Deck;
 
-
-
 public class BullFighting {
 	public Deck deck;
 	public Card card;
@@ -20,7 +18,7 @@ public class BullFighting {
 		init();
 	}
 	
-	public void new_game(){
+	public void newGame(){
 		this.deck = new Deck(Config.num_deck);
 		this.red = new ArrayList<Card>();
 		this.blue = new ArrayList<Card>();
@@ -32,7 +30,7 @@ public class BullFighting {
 	
 	public void play(){
 		for(int i=0; i<Config.num_sim; i++){
-			new_game();	
+			newGame();	
 			
 			// First, each party gets a revealed card
 			card = deck.Draw();
@@ -44,11 +42,11 @@ public class BullFighting {
 	        // Second, place bets
 	        for(int j=0; j<Config.sim_choices.size(); j++){
 	        	String choice = Config.sim_choices.get(j);
-	        	account.place_bet(choice, Config.min_stake);
+	        	account.placeBet(choice, Config.min_stake);
 	        }
 	        /*System.out.println(account);*/
 	        
-	        // Each party gets THREE more revealed cards
+	        // Third, each party gets THREE more revealed cards
 	        for (int j=0; j<3; j++){
 	        	card = deck.Draw();
 		        red.add(card);
@@ -60,7 +58,7 @@ public class BullFighting {
 	        	System.out.println("Red: "+red.get(j) + "  Blue: "+blue.get(j));
 	        }*/
 	        
-	        // Each team leader chooses another card
+	        // Fourth, each team leader chooses another card
 	        card = deck.Draw();
 	        red.add(card);
 	        card = deck.Draw();
@@ -71,12 +69,12 @@ public class BullFighting {
 	        }*/
 	        //System.out.println(deck.deck.size());
 	        
-	        // Check hand cards
+	        // Fifth, check hand cards
 	        String red_hand = CheckHands.check(red);
 	        String blue_hand = CheckHands.check(blue);
 	        //System.out.println(red_hand + " vs " + blue_hand);
 	        
-	        // Check choices hit
+	        // Sixth, check choices hit
 	        List<String> choices_hit = new ArrayList<String>();
 	        int red_score = CheckHands.handScore(red_hand);
 	        int blue_score = CheckHands.handScore(blue_hand);
@@ -100,12 +98,12 @@ public class BullFighting {
 	        }      
 	        //System.out.println(choices_hit);
 	        
-	        // Check payments
+	        // Seventh, check pay table and update payments
 	        for(int j=0; j<Config.sim_choices.size(); j++){
 	        	String choice = Config.sim_choices.get(j);
 	        	if (choices_hit.contains(choice)){
 	        		double payment = PayTable.getOdd(choice);
-	        		account.update_return(choice, payment);
+	        		account.updateReturn(choice, payment);
 	        	}        		
 	        }
 	        

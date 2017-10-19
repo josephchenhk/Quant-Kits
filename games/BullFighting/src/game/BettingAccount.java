@@ -40,11 +40,11 @@ public class BettingAccount {
 		}
 	}
 	
-	public void place_bet(String choice, double bet){
+	public void placeBet(String choice, double bet){
 		account.put(choice, Arrays.asList(account.get(choice).get(0)+bet, account.get(choice).get(1)));
 	}
 	
-	public void update_return(String choice, double payment){
+	public void updateReturn(String choice, double payment){
 		account.put(choice, Arrays.asList(account.get(choice).get(0), account.get(choice).get(1)+payment));
 	}
 	
