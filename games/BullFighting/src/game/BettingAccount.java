@@ -55,4 +55,8 @@ public class BettingAccount {
 		}
 		return output;
 	}
+	
+	public List<Double> getAccount(String choice){
+		return account.get(choice);
+	}
 }
