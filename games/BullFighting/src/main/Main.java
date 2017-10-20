@@ -9,6 +9,12 @@ import game.BullFighting;
 import game.Config;
 import game.PayTable;
 
+/**
+ * Game Bull Fighting
+ * @author joseph.chen
+ * @version 1.0
+ */
+
 public class Main {
 
 	public static void main(String[] args) throws FileNotFoundException{
