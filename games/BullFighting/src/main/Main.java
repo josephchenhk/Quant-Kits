@@ -12,7 +12,7 @@ import game.PayTable;
 /**
  * Game Bull Fighting
  * @author joseph.chen
- * @version 1.0
+ * @version 1.02
  */
 
 public class Main {

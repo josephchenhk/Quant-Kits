@@ -29,6 +29,7 @@ public class BullFighting {
 	}
 	
 	public void play(){
+		int count_double_bb = 0;
 		for(int i=0; i<Config.num_sim; i++){
 			newGame();	
 			
@@ -87,12 +88,13 @@ public class BullFighting {
 	        }
 	        if (red_hand=="Bull Bull" && blue_hand=="Bull Bull"){
 	        	choices_hit.add("Double Bull Bull");
+	        	count_double_bb += 1;
 	        }
 	        List<String> either_choice = Arrays.asList("No Bull", "Bull 1", "Bull 2", "Bull 3", "Bull 4",
-	        		"Bull 5", "Bull 6", "Bull 7", "Bull 8", "Bull 9", "Bull Bull", "Silver Bull",
-	        		"Gold Bull", "Bomb", "Five Little Bull");
+	        		"Bull 5", "Bull 6", "Bull 7", "Bull 8", "Bull 9", "Bull Bull", 
+	        		"Silver Bull - Gold Bull - Bomb - Five Little Bull");
 	        for (String ch: either_choice){
-	        	if (red_hand==ch || blue_hand==ch){
+	        	if (ch.contains(red_hand) || ch.contains(blue_hand)){
 		        	choices_hit.add(ch);
 		        }
 	        }      
@@ -109,6 +111,7 @@ public class BullFighting {
 	        
 	        //System.out.println(account);
 		}
+		System.out.println("Count double bull bull: " + count_double_bb);
 	}
 
 }

@@ -28,13 +28,7 @@ public class PayTable {
 			return 5.0 + 1.0;
 		}else if (hand=="Double Bull Bull"){
 			return 100.0 + 1.0;
-		}else if (hand=="Silver Bull"){
-			return 200.0 + 1.0;
-		}else if (hand=="Gold Bull"){
-			return 200.0 + 1.0;
-		}else if (hand=="Bomb"){
-			return 200.0 + 1.0;
-		}else if (hand=="Five Little Bull"){
+		}else if (hand=="Silver Bull - Gold Bull - Bomb - Five Little Bull"){
 			return 200.0 + 1.0;
 		}else if (hand=="Red Win"){
 			return 1.0 + 1.0;
