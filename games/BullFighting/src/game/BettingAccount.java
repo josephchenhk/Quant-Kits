@@ -40,10 +40,20 @@ public class BettingAccount {
 		}
 	}
 	
+	/**
+	 * Update the account by adding wager.
+	 * @param choice The selection of choice to bet
+	 * @param bet The amount of wager
+	 */
 	public void placeBet(String choice, double bet){
 		account.put(choice, Arrays.asList(account.get(choice).get(0)+bet, account.get(choice).get(1)));
 	}
 	
+	/**
+	 * Update the account by adding payment.
+	 * @param choice The selection of choice to bet
+	 * @param payment The amount of payment (including wager back)
+	 */
 	public void updateReturn(String choice, double payment){
 		account.put(choice, Arrays.asList(account.get(choice).get(0), account.get(choice).get(1)+payment));
 	}
@@ -56,6 +66,11 @@ public class BettingAccount {
 		return output;
 	}
 	
+	/**
+	 * Get account information
+	 * @param choice
+	 * @return Money in the account
+	 */
 	public List<Double> getAccount(String choice){
 		return account.get(choice);
 	}

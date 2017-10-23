@@ -38,14 +38,12 @@ public class BullFighting {
 	        red.add(card);
 	        card = deck.Draw();
 	        blue.add(card);
-	        /*System.out.print("Red: "+red.get(0) + "  Blue: "+blue.get(0));*/
 	        
 	        // Second, place bets
 	        for(int j=0; j<Config.sim_choices.size(); j++){
 	        	String choice = Config.sim_choices.get(j);
 	        	account.placeBet(choice, Config.min_stake);
 	        }
-	        /*System.out.println(account);*/
 	        
 	        // Third, each party gets THREE more revealed cards
 	        for (int j=0; j<3; j++){
@@ -54,26 +52,16 @@ public class BullFighting {
 		        card = deck.Draw();
 		        blue.add(card);
 	        }
-	        /*
-	        for (int j=0; j<4; j++){
-	        	System.out.println("Red: "+red.get(j) + "  Blue: "+blue.get(j));
-	        }*/
 	        
 	        // Fourth, each team leader chooses another card
 	        card = deck.Draw();
 	        red.add(card);
 	        card = deck.Draw();
 	        blue.add(card);
-	        /*
-	        for (int j=0; j<5; j++){
-	        	System.out.println("Red: "+red.get(j) + "  Blue: "+blue.get(j));
-	        }*/
-	        //System.out.println(deck.deck.size());
 	        
 	        // Fifth, check hand cards
 	        String red_hand = CheckHands.check(red);
 	        String blue_hand = CheckHands.check(blue);
-	        //System.out.println(red_hand + " vs " + blue_hand);
 	        
 	        // Sixth, check choices hit
 	        List<String> choices_hit = new ArrayList<String>();
@@ -98,7 +86,6 @@ public class BullFighting {
 		        	choices_hit.add(ch);
 		        }
 	        }      
-	        //System.out.println(choices_hit);
 	        
 	        // Seventh, check pay table and update payments
 	        for(int j=0; j<Config.sim_choices.size(); j++){
@@ -108,8 +95,6 @@ public class BullFighting {
 	        		account.updateReturn(choice, payment);
 	        	}        		
 	        }
-	        
-	        //System.out.println(account);
 		}
 		System.out.println("Count double bull bull: " + count_double_bb);
 	}
