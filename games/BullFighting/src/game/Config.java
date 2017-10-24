@@ -5,7 +5,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public interface Config {
-	int num_sim = 20000000;         // Number of simulations
+	int num_sim = 20000000;        // Number of simulations
 	int num_player = 1;	
 	int num_deck = 1;              // Number of decks
 	double total_stake = 0.0;
