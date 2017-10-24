@@ -166,7 +166,7 @@ public class CheckHands {
 	 * @param rank5
 	 * @return Bull `X`, int from 0 to 10 (0 means no bull, while 10 means bull bull)
 	 */
-	/*public static int isBullX(int rank1, int rank2, int rank3, int rank4, int rank5){
+	public static int isBullX(int rank1, int rank2, int rank3, int rank4, int rank5){
 		List<Integer> bull_x = new ArrayList<Integer>();
 		List<Integer> rank_array = Arrays.asList(rank1, rank2, rank3, rank4, rank5);
 		List<List<Integer>> comb3 = Combination.combinations(rank_array, 3);
@@ -189,7 +189,7 @@ public class CheckHands {
 		Collections.sort(bull_x);
 		Collections.reverse(bull_x);
 		return bull_x.get(0);
-	}*/
+	}
 	
 	
 	/**
@@ -201,7 +201,7 @@ public class CheckHands {
 	 * @param rank5
 	 * @return Bull `X`, int from 0 to 10 (0 means no bull, while 10 means bull bull)
 	 */
-	public static int isBullX(int rank1, int rank2, int rank3, int rank4, int rank5){
+	/*public static int isBullX(int rank1, int rank2, int rank3, int rank4, int rank5){
 		List<Integer> rank_array = Arrays.asList(rank1, rank2, rank3, rank4, rank5);
 		int c1,c2,c3,c4,c5;
 		for (int i=0; i<rank_array.size(); i++){
@@ -253,7 +253,7 @@ public class CheckHands {
 		    }
 		}
 	    return 0;
-	}
+	}*/
 
 	/**
 	 * Rank J/Q/K are treated as 10.
